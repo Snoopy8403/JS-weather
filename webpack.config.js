@@ -4,6 +4,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const DIST_DIR = path.resolve(__dirname, 'dist');
 
 module.exports = {
+    mode: 'development',
     entry: './app.js',
     output: {
         path: DIST_DIR,
