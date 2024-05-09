@@ -1,7 +1,11 @@
+import { addCard } from "./cards";
 import { loadWeatherData } from "./weather";
 
 export const initForm = () => {
     const form = document.getElementById('weather-form');
+    const submitBtn = document.getElementById('submit');
+    const errorMessage = document.getElementById('error-message');
+    const cardsContainer = document.getElementById('cards-container');
 
     setMinMaxDate();
 
@@ -10,8 +14,20 @@ export const initForm = () => {
         const city = document.getElementById('city-input').value;
         const date = document.getElementById('date-input').value;
 
-        const weatherData =  await loadWeatherData(city, date);
-        console.log(weatherData);
+        cardsContainer.insertAdjacentHTML('afterbegin', '<div id="loading-indicator" class="lds-dual-ring"></div>');
+        submitBtn.disabled = true;
+        try {
+            const weatherData =  await loadWeatherData(city, date);
+            addCard(city, date, weatherData);
+            form.reset();
+        } catch (error) {
+            errorMessage.style.display = 'block';
+            setTimeout(() =>  errorMessage.style.display = 'none', 2000);
+        } finally {
+            submitBtn.disabled = false;
+            cardsContainer.removeChild(document.getElementById('loading-indicator'));
+        }
+
     })
 }
 
